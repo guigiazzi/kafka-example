@@ -9,21 +9,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.vivo.kafka.example.dto.RequestMessageDTO;
-import br.com.vivo.kafka.example.producer.KafkaProducer;
+import br.com.vivo.kafka.example.producer.EventHubProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/kafka")
-public class KafkaController {
+@RequestMapping(value = "/event-hub")
+public class EventHubController {
 
-    private final KafkaProducer producer;
+    private final EventHubProducer producer;
 
     @PostMapping(value = "/message")
-    public void sendMessage(@RequestBody RequestMessageDTO requestMessage) throws JsonProcessingException {
-        log.info("Request received {}", new ObjectMapper().writeValueAsString(requestMessage));
-        producer.send(requestMessage.getMessage());
+    public void sendMessage(@RequestBody RequestMessageDTO request) throws JsonProcessingException {
+        log.info("Request received {}", new ObjectMapper().writeValueAsString(request));
+        producer.publish(request.getMessage());
     }
+
 }
